@@ -1,5 +1,3 @@
-Markdown
-
 # isaac-rl
 
 A Reinforcement Learning environment and training framework for **The Binding of Isaac: Repentance**, built around a low-latency, lockstep Lua-to-Python TCP IPC bridge and a custom `gymnasium.Env` interface.
@@ -10,6 +8,7 @@ Rather than relying on slow pixel-scraping and convolutional encoders, `isaac-rl
 
 ## Architecture
 
+```text
 ┌─────────────────────────────────────────┐          ┌──────────────────────────────────────────┐
 │   The Binding of Isaac (Lua Mod)        │          │   Python RL Environment (Gymnasium)      │
 │                                         │          │                                          │
@@ -23,13 +22,14 @@ Rather than relying on slow pixel-scraping and convolutional encoders, `isaac-rl
 │      IS_ACTION_PRESSED hooks            │          └──────────────────────────────────────────┘
 └─────────────────────────────────────────┘
 
+```
 ## Key Technical Details
 
-    Lockstep Synchronization: The Lua mod blocks on socket read every FRAME_SKIP = 4 simulation ticks until Python returns an action, preventing simulation drift during neural network forward/backward passes. TCP_NODELAY is enabled to eliminate Nagle buffering latency.
+    * Lockstep Synchronization: The Lua mod blocks on socket read every FRAME_SKIP = 4 simulation ticks until Python returns an action, preventing simulation drift during neural network forward/backward passes. TCP_NODELAY is enabled to eliminate Nagle buffering latency.
 
-    Dual-Hook Input Injection: Movement is injected via InputHook.GET_ACTION_VALUE (analog floats), while tear firing is injected via InputHook.IS_ACTION_PRESSED and IS_ACTION_TRIGGERED (digital booleans) to match the engine's internal polling behavior.
+    * Dual-Hook Input Injection: Movement is injected via InputHook.GET_ACTION_VALUE (analog floats), while tear firing is injected via InputHook.IS_ACTION_PRESSED and IS_ACTION_TRIGGERED (digital booleans) to match the engine's internal polling behavior.
 
-    Player-Relative Observation Space (Box(56,)): All coordinates are normalized relative to Isaac and the active room's playable inner bounds ([-1, 1]):
+    * Player-Relative Observation Space (Box(56,)): All coordinates are normalized relative to Isaac and the active room's playable inner bounds ([-1, 1]):
 
         Self State (6 floats): Normalized room position (x, y), velocity (vx, vy), HP ratio, and room clear flag.
 
@@ -37,7 +37,7 @@ Rather than relying on slow pixel-scraping and convolutional encoders, `isaac-rl
 
         Nearest 5 Projectiles (25 floats): Relative offset (dx, dy), velocity (vx, vy), and Euclidean distance, sorted by distance and zero-padded.
 
-    Action Space (MultiDiscrete([9, 5])): 9 movement directions (8-way + idle) × 5 shooting directions (4 cardinal + idle).
+    * Action Space (MultiDiscrete([9, 5])): 9 movement directions (8-way + idle) × 5 shooting directions (4 cardinal + idle).
 
 ## Setup & Installation
 1. Prerequisites
@@ -63,6 +63,7 @@ By default, Isaac sandboxes Lua mods and blocks the socket library. To enable lo
     --luadebug
 
 (Tip: Use a dedicated save slot such as Save Slot 3 for RL training, as active mods disable achievements.)
+
 3. Install the Lua Bridge Mod
 
 Copy the mod folder into your local Isaac mods directory:
