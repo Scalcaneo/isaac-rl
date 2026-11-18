@@ -108,3 +108,7 @@ luamod isaac_rl_bridge
     [ ] Stage 3 — Vectorized Multi-Instance Scaling: Running multiple concurrent Isaac instances on multi-core CPUs via SubprocVecEnv / port offsets.
 
     [ ] Stage 4 — Hierarchical Floor Navigation: High-level planner for procedural dungeon routing, resource management, and item selection paired with the low-level combat policy.
+
+
+License
+This project is licensed under the MIT License — see the LICENSE file for details.
